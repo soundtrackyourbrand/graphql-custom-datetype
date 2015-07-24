@@ -3,18 +3,28 @@ import {
   GraphQLError
 } from 'graphql';
 
-export CustomDateTimeType = new GraphQLScalarType({
+export default new GraphQLScalarType({
   name: 'DateTime',
   coerce: value => {
-    if (!value instanceof Date) throw new GraphQLError("Field error!", value)
-    if (isNaN(value.getTime())) throw new GraphQLError("Field error!", value)
+    if (!value instanceof Date) {
+      // Should we always return null instead of errors like the built in types?
+      throw new GraphQLError("Field error!", value)
+    }
+    if (isNaN(value.getTime())) {
+      throw new GraphQLError("Field error!", value)
+    }
     return value.toJSON()
   },
   coerceLiteral(ast) {
-    console.log("coerceLiteral", ast)
-    if (ast.kind !== "StringValue") throw new GraphQLError("Query error!", ast.loc)
-    let d = new Date(ast.value);
-    if (isNaN(d.getTime())) throw new GraphQLError("Query error!", ast.loc)
-    return d
+    // Should we import Kind somehow and use Kind.STRING instead of "StringValue"?
+    if (ast.kind !== "StringValue") {
+      // How do we create sane error messages?
+      throw new GraphQLError("Query error!", ast)
+    }
+    let result = new Date(ast.value);
+    if (isNaN(result.getTime())) {
+      throw new GraphQLError("Query error!", ast)
+    }
+    return result
   }
 });

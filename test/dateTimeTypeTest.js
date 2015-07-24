@@ -2,36 +2,19 @@ import {
   graphql,
   GraphQLSchema,
   GraphQLObjectType,
-  GraphQLScalarType,
-  GraphQLError
 } from 'graphql';
-
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-var CustomDateTimeType = new GraphQLScalarType({
-  name: 'DateTime',
-  coerce: value => {
-    if (!value instanceof Date) throw new GraphQLError("Field error!", value)
-    if (isNaN(value.getTime())) throw new GraphQLError("Field error!", value)
-    return value.toJSON()
-  },
-  coerceLiteral(ast) {
-    console.log("coerceLiteral", ast)
-    if (ast.kind !== "StringValue") throw new GraphQLError("Query error!", ast.loc)
-    let d = new Date(ast.value);
-    if (isNaN(d.getTime())) throw new GraphQLError("Query error!", ast.loc)
-    return d
-  }
-});
+import CustomGraphQLDateType from '..';
 
-describe('Type System: Custom scalar', () => {
-  it('coerses dates', () => {
+describe('GraphQL date type', () => {
+  it('coerses date object to string', () => {
     let aDateStr = '2015-07-24T10:56:42.744Z'
     let aDateObj = new Date(aDateStr)
 
     expect(
-      CustomDateTimeType.coerce(aDateObj)
+      CustomGraphQLDateType.coerce(aDateObj)
     ).to.equal(aDateStr);
   });
 
@@ -43,7 +26,7 @@ describe('Type System: Custom scalar', () => {
         name: 'Query',
         fields: {
           now: {
-            type: CustomDateTimeType,
+            type: CustomGraphQLDateType,
             resolve: () => now
           }
         }
@@ -53,10 +36,10 @@ describe('Type System: Custom scalar', () => {
     return expect(
       await graphql(schema, `{ now }`)
     ).to.deep.equal({
-        data: {
-          now: now.toJSON()
-        }
-      });
+      data: {
+        now: now.toJSON()
+      }
+    });
   });
 
   it('handles null', async () => {
@@ -67,7 +50,7 @@ describe('Type System: Custom scalar', () => {
         name: 'Query',
         fields: {
           now: {
-            type: CustomDateTimeType,
+            type: CustomGraphQLDateType,
             resolve: () => now
           }
         }
@@ -77,21 +60,21 @@ describe('Type System: Custom scalar', () => {
     return expect(
       await graphql(schema, `{ now }`)
     ).to.deep.equal({
-        data: {
-          now: null
-        }
-      });
+      data: {
+        now: null
+      }
+    });
   });
 
-  it.skip('fails when now is not a date', async () => {
-    let now = "asdasdasda"
+  it('fails when now is not a date', async () => {
+    let now = "invalid date"
 
     let schema = new GraphQLSchema({
       query: new GraphQLObjectType({
         name: 'Query',
         fields: {
           now: {
-            type: CustomDateTimeType,
+            type: CustomGraphQLDateType,
             resolve: () => now
           }
         }
@@ -100,7 +83,11 @@ describe('Type System: Custom scalar', () => {
 
     return expect(
       await graphql(schema, `{ now }`)
-    ).to.deep.equal({});
+    ).to.deep.equal({
+      errors: [{
+        message: "???"
+      }]
+    });
   });
 
   describe('dates as input', () => {
@@ -109,14 +96,13 @@ describe('Type System: Custom scalar', () => {
         name: 'Query',
         fields: {
           nextDay: {
-            type: CustomDateTimeType,
+            type: CustomGraphQLDateType,
             args: {
               date: {
-                type: CustomDateTimeType
+                type: CustomGraphQLDateType
               }
             },
             resolve: (_, {date}) => {
-              console.log("Input (should be a proper date object):", date, typeof date);
               return new Date(date.getTime() + 24 * 3600 * 1000)
             }
           }
@@ -131,22 +117,22 @@ describe('Type System: Custom scalar', () => {
       return expect(
         await graphql(schema, `{ nextDay(date: "${someday}") }`)
       ).to.deep.equal({
-          data: {
-            nextDay: nextDay
-          }
-        });
+        data: {
+          nextDay: nextDay
+        }
+      });
     });
 
     it('chokes on invalid dates as input', async () => {
-      let invalidDate = 'apa';
+      let invalidDate = 'invalid data';
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${invalidDate}") }`)
       ).to.deep.equal({
-          errors: {
-            nextDay: "???"
-          }
-        });
+        errors: [{
+          message: "???"
+        }]
+      });
     });
 
   })
