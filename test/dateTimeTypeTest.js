@@ -6,7 +6,7 @@ import {
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
-import CustomGraphQLDateType from '..';
+import CustomGraphQLDateType from '../datetype.js';
 
 describe('GraphQL date type', () => {
   it('coerses date object to string', () => {
