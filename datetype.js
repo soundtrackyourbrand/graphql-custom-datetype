@@ -6,12 +6,12 @@ import {
 export default new GraphQLScalarType({
   name: 'DateTime',
   coerce: value => {
-    if (!value instanceof Date) {
-      // Should we always return null instead of errors like the built in types?
-      throw new GraphQLError("Field error!")
+    if (!(value instanceof Date)) {
+      // Is this how you raise a "field error"?
+      throw new Error("Field error: value is not an instance of Date")
     }
     if (isNaN(value.getTime())) {
-      throw new GraphQLError("Field error!")
+      throw new Error("Field error: value is an invalid Date")
     }
     return value.toJSON()
   },
