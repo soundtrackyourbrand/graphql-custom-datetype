@@ -1,0 +1,21 @@
+{
+  "name": "graphql-custom-datetype",
+  "version": "1.0.0",
+  "description": "Custom date type for graphql",
+  "main": "datetype.js",
+  "dependencies": {
+    "graphql": "^0.1.6"
+  },
+  "devDependencies": {
+    "babel": "^5.8.3",
+    "babel-core": "5.8.3",
+    "babel-runtime": "5.8.3",
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "test": "mocha",
+    "test-watch": "mocha -w"
+  },
+  "license": "MIT"
+}
