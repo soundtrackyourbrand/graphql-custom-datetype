@@ -25,6 +25,9 @@ export default new GraphQLScalarType({
     if (isNaN(result.getTime())) {
       throw new GraphQLError("Query error!", ast)
     }
+    if (ast.value != result.toJSON()) {
+      throw new GraphQLError("Query error!", ast)
+    }
     return result
   }
 });

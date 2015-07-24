@@ -123,6 +123,19 @@ describe('GraphQL date type', () => {
       });
     });
 
+    it('does not accept alternative date formats', async () => {
+      let someday = 'Fri Jul 24 2015 12:56:42 GMT+0200 (CEST)';
+      let nextDay = '2015-07-25T10:56:42.000Z';
+
+      return expect(
+        await graphql(schema, `{ nextDay(date: "${someday}") }`)
+      ).to.deep.equal({
+        errors: [{
+          message: "???"
+        }]
+      });
+    });
+
     it('chokes on invalid dates as input', async () => {
       let invalidDate = 'invalid data';
 
