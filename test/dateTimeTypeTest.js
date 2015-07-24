@@ -83,9 +83,9 @@ describe('GraphQL date type', () => {
 
     return expect(
       await graphql(schema, `{ now }`)
-    ).to.deep.equal({
+    ).to.containSubset({
       errors: [{
-        message: "???"
+        message: "Field error: value is not an instance of Date"
       }]
     });
   });
