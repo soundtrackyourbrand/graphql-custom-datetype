@@ -129,9 +129,10 @@ describe('GraphQL date type', () => {
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${someday}") }`)
-      ).to.deep.equal({
+      ).to.containSubset({
         errors: [{
-          message: "???"
+          locations: [],
+          message: "Query error: Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ"
         }]
       });
     });
@@ -141,9 +142,10 @@ describe('GraphQL date type', () => {
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${invalidDate}") }`)
-      ).to.deep.equal({
+      ).to.containSubset({
         errors: [{
-          message: "???"
+          locations: [],
+          message: "Query error: Invalid date"
         }]
       });
     });
