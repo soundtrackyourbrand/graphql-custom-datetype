@@ -2,8 +2,8 @@ Custom Date Type for GraphQL
 ============================
 
 This is a custom date type implementation for GraphQL. GraphQL does not contain
-a native date type but it does allow you to specify custom scalar types that
-serializes to strings, or other scalar types, but conforms to certain
+a native date type but it does allow you to specify [custom scalar types](https://facebook.github.io/graphql/#sec-Scalars)
+that serializes to strings, or other scalar types, but conforms to certain
 standards.
 
 This date type accepts and outputs this format: '2015-07-24T13:15:34.814Z'
@@ -12,15 +12,15 @@ JavaScript when serializing dates to JSON.
 
 ## Usage
 
-You need the npm `graphql` module and this type (not yet published though).
-You can then create a small schema using the type. In this minimal example we
-expose the query "now" that simply returns the current date and time.
+To use this type you in your GraphQL schema you simply install this module with
+`npm install --save graphql-custom-datetype` and use it. In the minimal example
+below we expose the query `now` that simply returns the current date and time.
 
 The important part is that your resolve function needs to return a JavaScript
 Date object.
 
 ```javascript
-// examples/output.js
+// examples/now.js
 
 import {
   graphql,
@@ -50,6 +50,6 @@ graphql(schema, "{ now }")
 Running this prints the current date:
 
 ```shell
-$ babel-node examples/output.js
+$ babel-node examples/now.js
 { data: { now: '2015-07-24T13:23:15.580Z' } }
 ```
