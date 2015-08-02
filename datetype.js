@@ -2,6 +2,7 @@ import {
   GraphQLScalarType,
   GraphQLError
 } from 'graphql';
+import { Kind } from 'graphql/language'
 
 export default new GraphQLScalarType({
   name: 'DateTime',
@@ -16,8 +17,7 @@ export default new GraphQLScalarType({
     return value.toJSON()
   },
   coerceLiteral(ast) {
-    // Should we import Kind somehow and use Kind.STRING instead of "StringValue"?
-    if (ast.kind !== "StringValue") {
+    if (ast.kind !== Kind.STRING ) {
       throw new GraphQLError("Query error: Can only parse strings to dates but got a: " + ast.kind, [ast])
     }
     let result = new Date(ast.value);
