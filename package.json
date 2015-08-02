@@ -1,6 +1,6 @@
 {
   "name": "graphql-custom-datetype",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Custom date type for graphql",
   "main": "dist/datetype.js",
   "homepage": "https://github.com/soundtrackyourbrand/graphql-custom-datetype",
