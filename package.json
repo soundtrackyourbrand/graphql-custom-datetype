@@ -11,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/soundtrackyourbrand/graphql-custom-datetype.git"
   },
-  "dependencies": {
+  "peerDependencies": {
     "graphql": "^0.1.8"
   },
   "devDependencies": {
@@ -20,6 +20,7 @@
     "babel-runtime": "5.8.3",
     "chai": "3.2.0",
     "chai-subset": "1.0.1",
+    "graphql": "^0.1.8",
     "mocha": "2.2.5"
   },
   "scripts": {
