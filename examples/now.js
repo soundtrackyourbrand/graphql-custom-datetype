@@ -1,9 +1,9 @@
 import {
   graphql,
   GraphQLSchema,
-  GraphQLObjectType,
-} from 'graphql';
-import CustomGraphQLDateType from '..';
+  GraphQLObjectType
+} from 'graphql'
+import CustomGraphQLDateType from '..'
 
 let schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -16,8 +16,8 @@ let schema = new GraphQLSchema({
       }
     }
   })
-});
+})
 
-graphql(schema, "{ now }")
+graphql(schema, '{ now }')
   .then(console.log)
-  .catch(console.error);
+  .catch(console.error)

@@ -1,12 +1,12 @@
 import {
   graphql,
   GraphQLSchema,
-  GraphQLObjectType,
-} from 'graphql';
-import { describe, it } from 'mocha';
-import { expect } from 'chai';
+  GraphQLObjectType
+} from 'graphql'
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
 
-import CustomGraphQLDateType from '../datetype.js';
+import CustomGraphQLDateType from '../datetype.js'
 
 describe('GraphQL date type', () => {
   it('coerses date object to string', () => {
@@ -15,8 +15,8 @@ describe('GraphQL date type', () => {
 
     expect(
       CustomGraphQLDateType.serialize(aDateObj)
-    ).to.equal(aDateStr);
-  });
+    ).to.equal(aDateStr)
+  })
 
   it('stringifies dates', async () => {
     let now = new Date()
@@ -31,7 +31,7 @@ describe('GraphQL date type', () => {
           }
         }
       })
-    });
+    })
 
     return expect(
       await graphql(schema, `{ now }`)
@@ -39,8 +39,8 @@ describe('GraphQL date type', () => {
       data: {
         now: now.toJSON()
       }
-    });
-  });
+    })
+  })
 
   it('handles null', async () => {
     let now = null
@@ -55,7 +55,7 @@ describe('GraphQL date type', () => {
           }
         }
       })
-    });
+    })
 
     return expect(
       await graphql(schema, `{ now }`)
@@ -63,11 +63,11 @@ describe('GraphQL date type', () => {
       data: {
         now: null
       }
-    });
-  });
+    })
+  })
 
   it('fails when now is not a date', async () => {
-    let now = "invalid date"
+    let now = 'invalid date'
 
     let schema = new GraphQLSchema({
       query: new GraphQLObjectType({
@@ -79,16 +79,16 @@ describe('GraphQL date type', () => {
           }
         }
       })
-    });
+    })
 
     return expect(
       await graphql(schema, `{ now }`)
     ).to.containSubset({
       errors: [{
-        message: "Field error: value is not an instance of Date"
+        message: 'Field error: value is not an instance of Date'
       }]
-    });
-  });
+    })
+  })
 
   describe('dates as input', () => {
     let schema = new GraphQLSchema({
@@ -108,11 +108,11 @@ describe('GraphQL date type', () => {
           }
         }
       })
-    });
+    })
 
     it('handles dates as input', async () => {
-      let someday = '2015-07-24T10:56:42.744Z';
-      let nextDay = '2015-07-25T10:56:42.744Z';
+      let someday = '2015-07-24T10:56:42.744Z'
+      let nextDay = '2015-07-25T10:56:42.744Z'
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${someday}") }`)
@@ -120,36 +120,33 @@ describe('GraphQL date type', () => {
         data: {
           nextDay: nextDay
         }
-      });
-    });
+      })
+    })
 
     it('does not accept alternative date formats', async () => {
-      let someday = 'Fri Jul 24 2015 12:56:42 GMT+0200 (CEST)';
-      let nextDay = '2015-07-25T10:56:42.000Z';
+      let someday = 'Fri Jul 24 2015 12:56:42 GMT+0200 (CEST)'
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${someday}") }`)
       ).to.containSubset({
         errors: [{
           locations: [],
-          message: "Query error: Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ"
+          message: 'Query error: Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ'
         }]
-      });
-    });
+      })
+    })
 
     it('chokes on invalid dates as input', async () => {
-      let invalidDate = 'invalid data';
+      let invalidDate = 'invalid data'
 
       return expect(
         await graphql(schema, `{ nextDay(date: "${invalidDate}") }`)
       ).to.containSubset({
         errors: [{
           locations: [],
-          message: "Query error: Invalid date"
+          message: 'Query error: Invalid date'
         }]
-      });
-    });
-
+      })
+    })
   })
-
-});
+})
