@@ -14,7 +14,7 @@ describe('GraphQL date type', () => {
     let aDateObj = new Date(aDateStr)
 
     expect(
-      CustomGraphQLDateType.coerce(aDateObj)
+      CustomGraphQLDateType.serialize(aDateObj)
     ).to.equal(aDateStr);
   });
 
