@@ -21,7 +21,7 @@
     "babel-runtime": "5.8.3",
     "chai": "3.2.0",
     "chai-subset": "1.0.1",
-    "graphql": "^0.4.4",
+    "graphql": "^0.6.0",
     "mocha": "2.2.5",
     "standard": "^5.3.1"
   },
