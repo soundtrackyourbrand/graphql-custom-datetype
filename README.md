@@ -10,6 +10,9 @@ This date type accepts and outputs this format: '2015-07-24T13:15:34.814Z'
 which is commonly used in JSON since it is the default format used by
 JavaScript when serializing dates to JSON.
 
+[![npm version](https://badge.fury.io/js/graphql-custom-datetype.svg)](https://badge.fury.io/js/graphql-custom-datetype)
+[![Build Status](https://travis-ci.org/soundtrackyourbrand/graphql-custom-datetype.svg?branch=master)](https://travis-ci.org/soundtrackyourbrand/graphql-custom-datetype)
+
 ## Usage
 
 To use this type you in your GraphQL schema you simply install this module with
