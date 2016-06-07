@@ -12,7 +12,7 @@
     "url": "https://github.com/soundtrackyourbrand/graphql-custom-datetype.git"
   },
   "peerDependencies": {
-    "graphql": "^0.4.4"
+    "graphql": "^0.5.0 || ^0.6.0"
   },
   "devDependencies": {
     "babel": "5.8.3",
