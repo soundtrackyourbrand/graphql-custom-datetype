@@ -131,7 +131,7 @@ describe('GraphQL date type', () => {
       ).to.containSubset({
         errors: [{
           locations: [],
-          message: 'Query error: Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ'
+          message: 'Query error: Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ: ' + someday
         }]
       })
     })
@@ -144,9 +144,71 @@ describe('GraphQL date type', () => {
       ).to.containSubset({
         errors: [{
           locations: [],
-          message: 'Query error: Invalid date'
+          message: 'Query error: Invalid date: ' + invalidDate
         }]
       })
+    })
+  })
+
+  describe('dates as variable', () => {
+    let schema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          nextDay: {
+            type: CustomGraphQLDateType,
+            args: {
+              date: {
+                type: CustomGraphQLDateType
+              }
+            },
+            resolve: (_, {date}) => {
+              return new Date(date.getTime() + 24 * 3600 * 1000)
+            }
+          }
+        }
+      })
+    })
+
+    it('handles dates as variable', async () => {
+      let someday = '2015-07-24T10:56:42.744Z'
+      let nextDay = '2015-07-25T10:56:42.744Z'
+
+      return expect(
+        await graphql(schema,
+          `query ($date: DateTime!) { nextDay(date: $date) }`,
+          null, null, { date: someday })
+      ).to.deep.equal({
+        data: {
+          nextDay: nextDay
+        }
+      })
+    })
+
+    it('does not accept alternative date formats as variable', async () => {
+      let someday = 'Fri Jul 24 2015 12:56:42 GMT+0200 (CEST)'
+
+      let result = await graphql(schema,
+        `query ($date: DateTime!) { nextDay(date: $date) }`,
+        null, null, { date: someday })
+
+      expect(result).to.have.deep.property(
+        'errors[0].message',
+        'Invalid date format, only accepts: YYYY-MM-DDTHH:MM:SS.SSSZ: ' + someday
+      )
+    })
+
+    it('chokes on invalid dates as variable', async () => {
+      let invalidDate = 'invalid data'
+
+      let result = await graphql(schema,
+        `query ($date: DateTime!) { nextDay(date: $date) }`,
+        null, null, { date: invalidDate })
+
+      expect(result).to.have.deep.property(
+        'errors[0].message',
+        'Invalid date: ' + invalidDate
+      )
     })
   })
 })
